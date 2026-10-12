@@ -23,7 +23,8 @@ tags: [zero-engine, character-port, skinning, retarget, msh, m3, casc, localizat
 > read from the player's own SC2 install, replaces the basic clone trooper on a stock map, fully animated by the
 > stock `human` animation bank. Route: data/addon (official mod tools + Blender), no game file modified.
 > Verified in the real game (Instant Action, spawn screen and 3rd-person screenshots, running/strafing/aiming).
-> No assets are shared here, only the method.
+> No assets are shared here, only the method. The converted Marine is Blizzard's model and textures, so the addon
+> stays on the user's own machine (see Assets).
 
 ## Setup
 - SWBF2 Steam appid 6060, buildid 6217431 (`Galaxy.dll` present = the 2017 GOG Galaxy multiplayer update).
@@ -34,7 +35,8 @@ tags: [zero-engine, character-port, skinning, retarget, msh, m3, casc, localizat
   spaces, short path: the zip holds 18k files, 1.4 GB).
 - Blender: `SWBF-msh-Blender-IO` 1.5.3 (Calrissian97 fork; it states Blender 5.0+ support) for .msh import/export.
   `m3studio` (no releases, use the repo) for StarCraft II .m3 import: **it does not run on Blender 5.x**
-  (uses the removed `Action.fcurves`, 58 call sites), so a portable Blender 4.5 LTS is needed for the m3 side.
+  (about 20 lines use `Action.fcurves`, which Blender 5.0 removed), so a portable Blender 4.5 LTS is needed for
+  the m3 side.
 - Reading SC2 data: CASC storage with an MNDX root. `CascView` is GUI-only; the .NET `CascLib` from
   WoW-Tools/CASCExplorer supports SC2 (`CASCGameType.S2`) and builds for net8.0 with
   `-p:TargetFrameworks=net8.0` (pass a NuGet source explicitly if none is configured).
@@ -44,6 +46,10 @@ Data/asset route. A new side lvl containing one class whose `ClassParent` is the
 custom mission (stock world + stock sides + the new side) registered from `addme.lua`. Everything lives in the
 addon folder; nothing in `GameData\data` is touched. A native route makes no sense here: the toolchain already
 does everything.
+
+Other ports of a skinned character onto a host skeleton in the KB: the per-bone fit onto Risk of Rain 2's Commando
+rig (`games/risk-of-rain-2/helldiver-survivor.md`) and Halo 3 characters rigid-skinned to their dominant bone
+(`games/halo-3-mcc/halo-3-weapons-covenant-vehicles-and-maps-ported-into-minecr.md`).
 
 ## How the game works (what we had to learn)
 - **Class inheritance across lvl files works at runtime.** `ReadDataFile("dc:SIDE\\scb.lvl", "<class>")` after
@@ -61,8 +67,10 @@ does everything.
   `GeometryLowRes` in the odf points to a second, low-poly msh.
 - **Localization files** (`Common\Localize\<lang>.cfg`): nested `VarScope("...")` blocks with `VarBinary("key")`
   entries holding `Size(n)` and `Value("hex")` lines (64 hex digits per line). The payload is a 4-byte prefix
-  (the first 4 letters of the top-level scope, e.g. `enti`, `mapn`, `leve`) followed by UTF-16LE text, and every
-  byte is written as two hex digits **with the nibbles swapped** (0x53 -> "35"). Keys: unit name
+  followed by UTF-16LE text, `Size` counts both, and every byte is written as two hex digits **with the nibbles
+  swapped** (0x53 -> "35"). What the prefix holds varies: this port found the first 4 letters of the top-level
+  scope (`enti`, `mapn`, `leve`), while community cfg files (e.g. the Gametoast un-official patch's
+  `CustomLVL/localize/English.cfg`) have `00000000` or small integers there. Keys: unit name
   `entity.<side>.<rest of class name>` (class `scb_inf_marine` -> `entity.scb.inf_marine`), map name
   `mapname.name.<map id>`, `mapname.description.<map id>`.
 - **SC2 story-mode models** (`Assets/StoryModeCharacters/...`): control bones `<PREFIX>Ctrl_<Joint>_SkinPoint`
@@ -125,8 +133,8 @@ does everything.
    your own keys) to `addon\<ID>\data\_LVL_PC\` and add
    `ReadDataFile("..\\..\\addon\\<ID>\\data\\_LVL_PC\\core.lvl")` at the top of `addme.lua` for the menu.
 5. **The mod tools' `BF2_modtools.exe` (debug console + `BFront2.log`) asks for "CD 1" with the Steam install.**
-   The repack also ships a no-DVD variant; we did not use it (it is a disc-check bypass). **Fix:** test with the
-   retail exe and screenshots instead. The game rewrites `GameData\bf2cmd.txt` with its command line on every
+   We didn't work around the disc check: that would be a DRM bypass. **Fix:** test with the retail exe and
+   screenshots instead. The game rewrites `GameData\bf2cmd.txt` with its command line on every
    launch (original content was a lone CRLF): restore it if you keep a manifest of the game folder.
 6. **Launching `BattlefrontII.exe` directly sometimes exits silently** (Steam relaunch). **Fix:**
    `steam://rungameid/6060`; the window mode/resolution from a previous `/win` launch was remembered.
@@ -156,7 +164,9 @@ does everything.
 
 ## Assets
 All art comes from the user's own StarCraft II install (read-only, never redistributed): one story-mode character
-model and its body textures, converted as described above. No generated assets. Movement was tuned in the odf
+model and its body textures, converted as described above. No generated assets. The converted model and textures
+are still Blizzard's, so keep the built addon private: don't upload it (ModDB, Nexus) or hand it to other players
+for a multiplayer match. A shareable version needs original art in its place. Movement was tuned in the odf
 (MaxHealth 550, MaxSpeed 6, MaxStrafeSpeed 4.5, MaxTurnSpeed 4, JumpHeight 1.1, Acceleration 30,
 SprintAccelerateTime 0.6; stock values live in the mod tools' `data\Common\odfs\com_inf_default.odf`).
 
