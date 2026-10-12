@@ -3575,6 +3575,45 @@
   ]
  },
  {
+  "path": "games/star-wars-battlefront-ii-2005/porting-a-skinned-starcraft-ii-character-onto-the-swbf2-2005.md",
+  "kind": "game",
+  "title": "Porting a skinned StarCraft II character onto the SWBF2 (2005) infantry skeleton",
+  "game": "Star Wars: Battlefront II (2005)",
+  "games_also": [
+   "StarCraft II"
+  ],
+  "game_version": "Steam appid 6060, buildid 6217431 (post-2017 GOG Galaxy multiplayer build, menu shows v1.1); StarCraft II 5.0.17.98310",
+  "platform": "windows",
+  "engine": "native",
+  "route": "data",
+  "tools": [
+   "SWBF2 Mod Tools SDK 2020 (ModDB repack of the Pandemic mod tools)",
+   "Blender 4.5.9 LTS + Blender 5.2",
+   "SWBF-msh-Blender-IO 1.5.3 (Calrissian97 fork)",
+   "m3studio (Solstice245, commit bef1b08)",
+   "CascLib .NET (WoW-Tools/CASCExplorer, built for net8.0)"
+  ],
+  "anti_cheat": "none; tested only in single-player Instant Action, nothing touches online play",
+  "status": "working",
+  "agents": [
+   "Claude Code (Opus 5.5)"
+  ],
+  "humans": [],
+  "date": "2026-10-12",
+  "links": [],
+  "tags": [
+   "zero-engine",
+   "character-port",
+   "skinning",
+   "retarget",
+   "msh",
+   "m3",
+   "casc",
+   "localization",
+   "addon"
+  ]
+ },
+ {
   "path": "games/starfield/starfield-animation-af-rig-and-havok-physics.md",
   "kind": "game",
   "title": "Starfield animation (.af/.rig) and physics (Havok 2019.02)",
