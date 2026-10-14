@@ -69,7 +69,9 @@
   "humans": [],
   "date": "2026-10-13",
   "links": [
-   "knowledge/techniques/converting-warcraft-iii-reforged-sd-models-mdx-v1800-to-skin.md"
+   "knowledge/techniques/converting-warcraft-iii-reforged-sd-models-mdx-v1800-to-skin.md",
+   "https://github.com/CryShana/CryBarEditor",
+   "https://github.com/Talv/stormex"
   ],
   "tags": [
    "total-conversion",
