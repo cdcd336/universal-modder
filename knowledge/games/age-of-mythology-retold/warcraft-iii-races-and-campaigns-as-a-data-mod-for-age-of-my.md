@@ -17,6 +17,8 @@ humans: []
 date: '2026-10-13'
 links:
 - knowledge/techniques/converting-warcraft-iii-reforged-sd-models-mdx-v1800-to-skin.md
+- https://github.com/CryShana/CryBarEditor
+- https://github.com/Talv/stormex
 tags: [total-conversion, data-mod, culture, civilization, campaign, scenario-triggers, xs, cinematics, model-conversion, tmm, tma, manifest-limit, mdx]
 ---
 # Warcraft III races and campaigns as a data mod for Age of Mythology: Retold
@@ -37,12 +39,21 @@ tags: [total-conversion, data-mod, culture, civilization, campaign, scenario-tri
 - **Tools:** CryBar.Cli (BAR archives, `glb-to-tmm`, XMB, `xs-to-xml`), stormex (reads the WC3 3.0 CASC storage),
   Blender (previews and portraits only), Python for everything else.
 - **Source assets:** an installed Warcraft III Reforged (read-only). Nothing from either game is redistributed;
-  the mod is personal.
+  the mod is personal. Its models, icons and voices are Blizzard's, so the built mod stays on this PC: no upload to
+  the AoM: Retold mod site or Nexus, and it isn't handed to other players for a multiplayer match. A shareable
+  version would need original art and audio.
 
 ## Route and why
 A pure **data mod**: proto/techtree/culture/civ XML through `*_mods.xml` merge files, new art (TMM/TMA models,
 DDT textures), sounds, UI pages and scenarios. Bang is native code with no supported plugin loader, and data
 covers everything needed: new cultures, gods, AI personalities, triggers. No DLL, no hook.
+- The Bang engine's additive merge (`mergeMode`) and `DebugOutputGameData` are documented officially for Age of
+  Empires III: DE, with different file names there (`protomods.xml`):
+  [Additive Data Mods](https://support.ageofempires.com/hc/en-us/articles/360062106732-Additive-Data-Mods).
+- The other new-civilization data mod in the KB is
+  [San Franciscans for AoE II DE](../age-of-empires-ii-de/san-franciscans-civ.md) (Genie engine, units rendered
+  from 3D). Another Blizzard-asset port kept private is the
+  [StarCraft II character in SWBF2](../star-wars-battlefront-ii-2005/porting-a-skinned-starcraft-ii-character-onto-the-swbf2-2005.md).
 
 ## How the game works (what we had to learn)
 - **Merge files:** each data file has a `*_mods.xml` twin (`proto_mods.xml`, `techtree_mods.xml`,
@@ -52,7 +63,8 @@ covers everything needed: new cultures, gods, AI personalities, triggers. No DLL
 - **A new culture = a cloned culture.** Copy the data graph of a base culture (its own techs, units, buildings,
   gods), rename every id with a prefix, then re-wire what is shared: train lists of shared buildings,
   `<animfile culture="x">` on shared protos, unit functions, transforms, unit commands, god picker and tech
-  tree XAML pages. Age-up techs of cloned minor gods only show if added with the Major God Builder trick:
+  tree XAML pages. Age-up techs of cloned minor gods only show if added with the trick the community
+  [Major God Builder](https://forums.ageofempires.com/t/major-god-builder/287709) uses:
   `CommandRemove SecretsOfTheTitans`, `CommandAdd <age tech> row=2 column=0` on `AbstractTownCenter`, then
   `CommandAdd SecretsOfTheTitans`, all in the culture's start tech.
 - **What an attack is:** a proto's `<protoaction>` (HandAttack, RangedAttack, ChargedRangedAttack...) only works
@@ -65,7 +77,8 @@ covers everything needed: new cultures, gods, AI personalities, triggers. No DLL
 - **Models:** `glb-to-tmm` (CryBar) turns one glTF into a TMM plus one TMA per animation. `.material` and the
   simdata (bounds, attach points, animation durations and tags) are written by hand. Materials are
   `opaque_lit` with BaseColor, Normals, Masks (AO, roughness, metal) and Masks2 (R = player colour);
-  alpha cut-out is the `ALPHA_CUT_OUT` permutation plus a threshold. The MDX side is in the linked technique note.
+  alpha cut-out is the `ALPHA_CUT_OUT` permutation plus a threshold. The MDX side is in the technique note
+  [Converting Warcraft III Reforged SD models](../../techniques/converting-warcraft-iii-reforged-sd-models-mdx-v1800-to-skin.md).
 - **The model manifest has a hard limit** (see Gotchas): the base game has about 12,800 entries in
   `intermediate\modelcache\modelManifest*.xml`, and the game crashes after loading data when the total passes
   about 14,460. That leaves about **1,650 TMM + TMA entries for all active mods together**.
@@ -138,13 +151,16 @@ covers everything needed: new cultures, gods, AI personalities, triggers. No DLL
 13. **Computer-use clicks miss the top-right corner of the game** (the main menu button). **Cause:** an invisible
     agent window covers it (`um win drive` reports the agent as foreground). **Fix:** use Escape in game, or ask the
     human for that one click.
-14. **Python written through a Bash heredoc breaks** (`\n` and `\b` become control characters). Write code files
-    with a file tool instead.
+14. **Python written through a Bash heredoc came out broken** (`\n` and `\b` turned into control characters).
+    **Cause:** not Bash itself, which keeps `\n` and `\b` as two characters in any heredoc (a quoted one,
+    `<<'EOF'`, changes nothing at all); a layer between the agent and the shell converted them. **Fix:** write code
+    files with a file tool.
 
 ## Assets
 All art and audio come from the user's own installed Warcraft III: SD models converted by script, SD command
 button icons upscaled, original voices. Hero portraits are Blender renders of the WC3 portrait models from the
-model's own camera. No generated art. Nothing from either game is shared.
+model's own camera. No generated art. Nothing from either game is shared, and the built mod stays private (see
+Setup).
 
 ## Cost and time
 About a week of agent sessions (2026-10-06 to 2026-10-13), local and cloud, with daily playtests by the human.

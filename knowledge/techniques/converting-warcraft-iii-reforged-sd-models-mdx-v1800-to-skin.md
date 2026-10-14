@@ -15,12 +15,15 @@ tags: [mdx, warcraft-iii, reforged, casc, stormex, gltf, skinning, skeletal-anim
 > How to turn the classic (SD) models that ship inside Warcraft III Reforged, which are MDX version 1800, into
 > one skinned, animated glTF per unit: every sequence as a named animation, a team-colour mask and attach points.
 > About 280 units, buildings and missiles went through it into Age of Mythology: Retold (via CryBar's
-> `glb-to-tmm`), checked by Blender renders and in game.
+> `glb-to-tmm`), checked by Blender renders and in game: see
+> [Warcraft III races and campaigns in AoM: Retold](../games/age-of-mythology-retold/warcraft-iii-races-and-campaigns-as-a-data-mod-for-age-of-my.md).
+> The converted models are still Blizzard's art: keep them on your own PC.
 
 ## Setup
-- **Source:** Warcraft III Reforged 3.0.0.24268 installed (CASC storage). stormex 2.2.0 reads it. The SD art is
-  under the `war3.w3mod:` prefix (`war3.w3mod:units\orc\grunt\grunt.mdx`). `_hd.w3mod` holds the Reforged HD
-  art, and an `_de.w3mod` tree exists too. Localized voices are under `_locales\<lang>.w3mod`.
+- **Source:** Warcraft III Reforged 3.0.0.24268 installed (CASC storage). [stormex](https://github.com/Talv/stormex)
+  2.2.0 reads it. The SD art is under the `war3.w3mod:` prefix (`war3.w3mod:units\orc\grunt\grunt.mdx`).
+  `_hd.w3mod` holds the Reforged HD art, and an `_de.w3mod` tree exists too. Localized voices are under
+  `_locales\<lang>.w3mod`.
 - **Listfile:** dump the full CASC file list once (about 95,000 names) and search it locally.
 - **Unit data that helps the conversion:**
   - `units\unitskin.txt`: model file and `modelScale:sd`;
